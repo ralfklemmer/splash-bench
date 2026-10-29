@@ -2,7 +2,7 @@
 
 Gilt für oMLX mit Splash als externer Engine, auf einem Mac mit **M3 oder neuer** und **macOS 26.4 oder neuer**. Die Matrix deckt die beiden gemessenen Modelle **Qwen3.8-27B** und **Qwen3.6-35B-A3B** ab. Seit Splash 1.4 und oMLX 0.7.3rc1 kommen Qwen3.8-Flash-Next (≈ 66 GB bei 32K), Ornith-1.5-122B (≈ 69 GB) und Flint (≈ 27 GB) dazu. Sie sind nicht gemessen, Details im Handbuch, Kapitel 3.
 
-> **Gemessen ist nur die 128-GB-Stufe** (M5 Max, macOS 27.0.1, oMLX 0.7.1rc1, Splash 1.3.2). Alle anderen Stufen sind aus der Speicherformel abgeleitet – **Schätzungen**. Prüfe auf deinem Mac mit `splashcheck` und miss selbst.
+> **Gemessen ist nur die 128-GB-Stufe** (M5 Max, macOS 27.0.1, oMLX 0.7.1rc1, Splash 1.3.2). Alle anderen Stufen sind aus der Speicherformel abgeleitet – **Schätzungen**. Prüfe auf deinem Mac mit Splash Bench oder `splashcheck` und miss selbst.
 
 ## Grundlage: Speicherbedarf
 
@@ -15,7 +15,7 @@ Formel: **Gewichte + Draft/3 + 3 GB + KV-Cache (int8)**
 
 Gegenprobe (gemessen): 27B, 131.072 Prompt-Tokens → Splash-Prozess 25,2 GB Spitzenspeicher.
 
-Der Bedarf in der Tabelle ist nur das Modell. macOS, oMLX selbst und deine anderen Apps brauchen zusätzlich Speicher. Wie viel, hängt von deinem Alltag ab – das ist nicht gemessen. Die Matrix rechnet wie `splashcheck` mit der Annahme, dass etwa **75 % des RAM** für das Modell nutzbar sind (Standard-Anteil, den macOS der GPU überlässt; nicht gemessen, offener Punkt).
+Der Bedarf in der Tabelle ist nur das Modell. macOS, oMLX selbst und deine anderen Apps brauchen zusätzlich Speicher. Wie viel, hängt von deinem Alltag ab – das ist nicht gemessen. Die Matrix rechnet wie Splash Bench und `splashcheck` mit der Annahme, dass etwa **75 % des RAM** für das Modell nutzbar sind (Standard-Anteil, den macOS der GPU überlässt; nicht gemessen, offener Punkt).
 
 ## Matrix nach RAM-Stufe
 
@@ -52,4 +52,4 @@ Entscheidungsregel für deine eigene Messung: **≥ 15 % mehr tok/s auf deinem H
 
 ## Hilf mit, die Schätzungen zu ersetzen
 
-Miss mit `splashbench`, trag die Werte in `messvorlage.csv` ein und schick sie mir (Antwort auf die Kit-Mail). Mit genug Messungen von 32-, 36-, 48- und 64-GB-Macs wird aus „Schätzung“ hier „gemessen“.
+Miss mit Splash Bench (oder `splashbench`), trag die Werte in `messvorlage.csv` ein und schick sie als GitHub-Issue („Idee oder Wunsch“, Feld „Eigene Messwerte“). Mit genug Messungen von 32-, 36-, 48- und 64-GB-Macs wird aus „Schätzung“ hier „gemessen“.

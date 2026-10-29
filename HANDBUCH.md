@@ -23,7 +23,7 @@ Ralf Klemmer · Stand: 17.10.2026 · gemessen mit oMLX 0.7.1rc1 und Splash 1.3.2
 12. Offene Punkte in diesem Handbuch
 13. Quellen
 
-Die Programme im Kit (`splashcheck`, `splashbench`, `splashdemo`) beschreibt `README.md` mit allen Flags und dem Weg zur Installation. Dieses Handbuch nennt nur die Flags, die du für die Abläufe brauchst.
+Am einfachsten geht alles mit der App **Splash Bench**: Sie prüft die Voraussetzungen, zeigt fehlende Downloads als Befehl zum Kopieren und misst oMLX gegen Splash. Für das Terminal gibt es dieselben Abläufe als `splashcheck`, `splashbench` und `splashdemo`. Installation und alle Flags beschreibt `README.md`. Dieses Handbuch nennt nur die Flags, die du für die Abläufe brauchst.
 
 ---
 
@@ -50,31 +50,31 @@ Dein Programm ──► oMLX (Port 8000) ──┬──► MLX-Engine (MTP)    
 
 | Was | Anforderung | Prüfen mit |
 |---|---|---|
-| Mac | **Apple M3 oder neuer**. M1/M2 nur mit dem inoffiziellen Community-Port `splash-m1` (nicht von Inco AI, ohne Support) | `splashcheck` |
-| RAM | ab ca. 32 GB für 27B mit 32K Kontext (Schätzung, siehe Kapitel 3) | `splashcheck` |
+| Mac | **Apple M3 oder neuer**. M1/M2 nur mit dem inoffiziellen Community-Port `splash-m1` (nicht von Inco AI, ohne Support) | Splash Bench / `splashcheck` |
+| RAM | ab ca. 32 GB für 27B mit 32K Kontext (Schätzung, siehe Kapitel 3) | Splash Bench / `splashcheck` |
 | Speicherplatz | 27B: 16,6 GB + 3,8 GB Draft = 20,4 GB · 35B-A3B: 21,1 GB + 1,0 GB Draft = 22,1 GB, dazu der SSD-Cache von Splash (Standard: so groß wie der oMLX-SSD-Cache, bei Ralf 92 GB; einstellbar, Kapitel 6) | Finder / `df -h ~` |
 | macOS | **26.4 oder neuer** (die Homebrew-Formel bricht sonst ab); gemessen mit macOS 27.0.1 | `sw_vers -productVersion` |
-| oMLX | installiert und gestartet, Server auf Port 8000 (Kapitel 4, Vorab) | `splashcheck` |
+| oMLX | installiert und gestartet, Server auf Port 8000 (Kapitel 4, Vorab) | Splash Bench / `splashcheck` |
 | Splash | mindestens 1.3.0; für Mixed-Bit-Modelle 1.3.1, für ein Thinking-Budget 1.3.2, für Qwen3.8-Flash-Next 1.4.0, für Ornith-1.5-122B und Flint 1.4.1. Ist Splash zu alt, graut oMLX den Schalter aus und nennt den Grund. | `splash --version` |
 | Homebrew | für die Installation von Splash | `brew --version` |
 | Hugging Face CLI | Befehl `hf` für die Downloads (alternativ der Download in der oMLX-Admin-Oberfläche) | `hf --help` |
-| oMLX-API-Key | nur für `splashbench`, `splashdemo` und die Admin-API; `splashcheck` läuft auch ohne | Umgebungsvariable `OMLX_API_KEY` |
+| oMLX-API-Key | für Splash Bench, `splashbench`, `splashdemo` und die Admin-API; `splashcheck` läuft auch ohne | Splash Bench liest ihn selbst aus `~/.omlx/settings.json`; im Terminal Umgebungsvariable `OMLX_API_KEY` |
 
-API-Key für die Sitzung setzen:
+API-Key für die Sitzung im Terminal setzen (die App braucht das nicht):
 
 ```sh
 export OMLX_API_KEY="dein-key"
 ```
 
-> Den Key nie in Skripte, Screenshots oder Messdateien schreiben. Die Kit-Programme lesen ihn nur aus der Umgebungsvariable und schicken ihn nur an deinen oMLX-Server (`-base-url`, Standard `http://localhost:8000`).
+> Den Key nie in Skripte, Screenshots oder Messdateien schreiben. Die Programme lesen ihn aus der Umgebungsvariable (die App sonst aus `~/.omlx/settings.json`), schicken ihn nur an deinen oMLX-Server (`-base-url`, Standard `http://localhost:8000`) und zeigen ihn nirgends an.
 
-**Erster Schritt immer:**
+**Erster Schritt immer:** Splash Bench starten und die Voraussetzungen ansehen – oder im Terminal:
 
 ```sh
 splashcheck
 ```
 
-`splashcheck` zeigt Chip, RAM, macOS, Splash-Version, ob oMLX erreichbar ist, welche Zielmodelle und Drafts im Modellordner liegen, ob oMLX Splash für das Modell für kompatibel hält, welche Modelle zu deinem RAM passen – und gibt dir fertige `hf download`-Befehle für alles, was fehlt.
+Beide zeigen Chip, RAM, macOS, Splash-Version, ob oMLX erreichbar ist, welche Zielmodelle und Drafts im Modellordner liegen, ob oMLX Splash für das Modell für kompatibel hält, welche Modelle zu deinem RAM passen – und gibt dir fertige `hf download`-Befehle für alles, was fehlt.
 
 ---
 
@@ -101,7 +101,7 @@ Seit Splash 1.4 und oMLX 0.7.3rc1 kann oMLX drei weitere Familien an Splash gebe
 
 Flash-Next und Flint lädt Splash **nur als GGUF**, nicht als MLX. oMLX liest GGUF-Dateien direkt aus dem Modellordner und benennt das Modell nach der Datei. `splashcheck` und die App zeigen die passenden `hf download`-Befehle, laden aber nichts ungefragt.
 
-Der Katalog im Kit ist von Hand gepflegt (Stand 29.10.2026). Was oMLX tatsächlich an Splash gibt, entscheidet oMLX selbst. Die App zeigt deshalb auch Modelle, die nicht im Katalog stehen, und übernimmt den fehlenden Draft direkt aus der oMLX-Antwort.
+Der Katalog in Splash Bench ist von Hand gepflegt (Stand 29.10.2026). Was oMLX tatsächlich an Splash gibt, entscheidet oMLX selbst. Die App zeigt deshalb auch Modelle, die nicht im Katalog stehen, und übernimmt den fehlenden Draft direkt aus der oMLX-Antwort.
 
 ### Speicherbedarf mit Splash
 
@@ -141,7 +141,7 @@ Die ausführliche Matrix mit Begründung steht in `vorlagen/modell-matrix.md`.
 MLX musst du nicht separat installieren: Die oMLX-App bringt MLX und ihre eigene Python-Umgebung im App-Bundle mit.
 
 1. **oMLX** von omlx.ai oder GitHub (`jundot/omlx`) laden und nach `/Applications` ziehen. Beim ersten Start legt oMLX `~/.omlx` an, mit dem Modellordner `~/.omlx/models` und der Konfiguration `~/.omlx/settings.json`.
-2. **Admin-Oberfläche** öffnen: `http://localhost:8000/admin`. Dort einen **API-Key** setzen. Admin-API, Benchmark und die Kit-Programme `splashbench` und `splashdemo` brauchen ihn.
+2. **Admin-Oberfläche** öffnen: `http://localhost:8000/admin`. Dort einen **API-Key** setzen. Admin-API, Benchmark, Splash Bench sowie `splashbench` und `splashdemo` brauchen ihn.
 3. **Homebrew** installieren, falls noch nicht vorhanden: Befehl von brew.sh kopieren.
 
 ### Schritt 1 – Splash installieren
@@ -179,7 +179,7 @@ hf download incoai/Qwen3.6-35B-A3B-DFlash2 \
   --local-dir ~/.omlx/models/incoai/Qwen3.6-35B-A3B-DFlash2
 ```
 
-Abkürzung: `splashcheck` gibt dir genau die Befehle aus, die bei dir noch fehlen.
+Abkürzung: Splash Bench (unter „Empfehlungen“) und `splashcheck` geben dir genau die Befehle aus, die bei dir noch fehlen.
 
 Welcher Modellordner gilt, steht in `~/.omlx/settings.json` unter `model.model_dirs` (bei Ralf `~/.omlx/models/mlx-community`). Statt `hf` kannst du die Modelle auch in der oMLX-Admin-Oberfläche über den eingebauten Hugging-Face-Download laden.
 
@@ -286,7 +286,7 @@ Diese Einstellungen gibt oMLX an Splash weiter. Global stehen sie in `~/.omlx/se
 
 Zwei Werkzeuge, zwei Fragen:
 
-| | eingebauter oMLX-Benchmark | `splashbench` (im Kit) |
+| | eingebauter oMLX-Benchmark | Splash Bench / `splashbench` |
 |---|---|---|
 | Frage | Wie verhält sich das Modell bei **langem Kontext**? | Was bringt Splash bei **meinen typischen Aufgaben**? |
 | Prompt | synthetisch, z. B. 131.072 Prompt-Tokens, 128 Ausgabe-Tokens | echte Prompts: `code`, `prose`, `translate` |
@@ -398,7 +398,7 @@ oMLX hat einen eingebauten **ANE-Tuning-Lauf**. Er stellt die Aufteilung zwische
      -H "Authorization: Bearer $OMLX_API_KEY"
    ```
 
-3. Danach die Baseline messen (`splashbench` oder eingebauter Benchmark) und mit den Community-Bestwerten aus Schritt 2 vergleichen.
+3. Danach die Baseline messen (Splash Bench, `splashbench` oder eingebauter Benchmark) und mit den Community-Bestwerten aus Schritt 2 vergleichen.
 4. Liegst du deutlich darunter: oMLX-Einstellungen in Richtung der Community-Bestwerte bringen und erneut messen, bis die Werte stabil sind.
 
 Ergebnis: eine **faire Baseline**. Erst gegen die misst du Splash.
@@ -415,9 +415,9 @@ Messmatrix pro Modell:
 | Splash-ANE-Prefill | an, aus | wirkt nur beim Prefill (Kapitel 6) |
 | Wiederholungen | mindestens 3, Median | ein Einzellauf schwankte bis zu 20 % |
 
-Kurze Prompts misst `splashbench`, 32K und 131K der eingebaute Benchmark (7.1).
+Kurze Prompts misst Splash Bench (oder `splashbench`), 32K und 131K der eingebaute Benchmark (7.1).
 
-1. `splashbench` für dein Modell laufen lassen (vergleicht automatisch gegen die Baseline).
+1. In Splash Bench den Vergleich für dein Modell starten (oder `splashbench`; beide vergleichen automatisch gegen die Baseline).
 2. Bestimme deinen **Hauptworkload**: Was machst du überwiegend – Code, Prosa, Übersetzen, Agent mit langem Kontext?
 3. Entscheidungsregel anwenden:
 
@@ -537,8 +537,8 @@ Diese Punkte sind im Projekt-Brief nicht belegt und vor der Veröffentlichung zu
 - **M1/M2:** `splash-m1` ist nicht getestet; Bezugsquelle siehe Kapitel 4, Schritt 1.
 - **Eingebauter oMLX-Benchmark:** Menüpfad in der App fehlt (die Optionen stehen in Kapitel 7.1).
 - **ANE-Tuning (Methode Schritt 3):** Der Body braucht `model_id`. Laut oMLX-Code sind optional `sequence_length` (Standard 2048) und `repeats` (Standard 2) sowie Schalter für CPU- und ANE-Anteile. Ergebnis per `GET /admin/api/bench/ane-tune/<tuning_id>/results`. Offen sind die Laufzeit und ob es einen Knopf in der App gibt.
-- **RAM-Stufen unter 128 GB:** nur geschätzt. Die 75-%-Annahme für den nutzbaren RAM (aus `splashcheck`) ist nicht gemessen und nicht im Brief belegt; Community-Messungen von kleineren Macs wären die beste Bestätigung.
-- **Lizenzen** von Qwen-Modellen, Drafts und Splash: siehe `lead-magnet/CHECKLISTE-rechtliches-und-technik.md`.
+- **RAM-Stufen unter 128 GB:** nur geschätzt. Die 75-%-Annahme für den nutzbaren RAM (aus Splash Bench und `splashcheck`) ist nicht gemessen und nicht im Brief belegt; Community-Messungen von kleineren Macs wären die beste Bestätigung.
+- **Lizenzen** von Qwen-Modellen, Drafts und Splash: nicht geprüft. Splash Bench verteilt keine Modelle und kein Splash; es gibt nur die Download-Befehle aus. Lizenzen und Nutzungsbedingungen bitte bei den Anbietern auf Hugging Face und bei Inco AI nachlesen.
 
 ---
 

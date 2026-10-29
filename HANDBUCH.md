@@ -1,9 +1,9 @@
 # Splash Bench – Handbuch
 
-**Gleicher Mac, gleiches Modell, bis zu 1,7× mehr Tokens pro Sekunde.**
+**Gleicher Mac, gleiches Modell, bis zu 1,9× mehr Tokens pro Sekunde.**
 Von null bis zur eigenen Messung: oMLX mit Splash einrichten, richtig messen und entscheiden, ob sich Splash auf deinem Mac lohnt.
 
-Ralf Klemmer · Stand: 17.10.2026 · gemessen mit oMLX 0.7.1rc1 und Splash 1.3.2
+Ralf Klemmer · Stand: 29.10.2026 · gemessen am 29.10.2026 mit oMLX 0.7.3rc1 und Splash 1.5.0
 
 ---
 
@@ -42,7 +42,7 @@ Dein Programm ──► oMLX (Port 8000) ──┬──► MLX-Engine (MTP)    
                                       └──► Splash (Loopback-Port)  ──► Zielmodell + DFlash2-Draft
 ```
 
-**Das Ergebnis vorweg:** Bei Qwen3.8-27B bringt Splash 1,4–1,7× mehr Tokens pro Sekunde. Bei Qwen3.6-35B-A3B kaum etwas, teils weniger – dort ist MTP schon schnell.
+**Das Ergebnis vorweg:** Bei Qwen3.8-27B bringt Splash 1,3- bis 1,9-mal mehr Tokens pro Sekunde. Bei Qwen3.6-35B-A3B nur wenig (1,05- bis 1,3-mal) – oMLX (MTP) ist dort schon schnell.
 
 ---
 
@@ -86,8 +86,8 @@ Beide zeigen Chip, RAM, macOS, Splash-Version, ob oMLX erreichbar ist, welche Zi
 |---|---|---|
 | Zielmodell (MLX, 4 Bit) | `Jundot/Qwen3.8-27B-oQ4e-mtp` (16,6 GB) | `Jundot/Qwen3.6-35B-A3B-oQ4e-mtp` (21,1 GB) |
 | Draft (DFlash2) | `incoai/Qwen3.8-27B-DFlash2` (3,8 GB) | `incoai/Qwen3.6-35B-A3B-DFlash2` (1,0 GB) |
-| Gewinn durch Splash (gemessen, M5 Max) | 1,38–1,73× | 0,71–1,29× |
-| Empfehlung | **Splash an** | **oMLX (MTP) lassen**, außer Messung sagt anderes |
+| Gewinn durch Splash (gemessen, M5 Max) | 1,33–1,87× | 1,05–1,32× |
+| Empfehlung | **Splash an** | kann an, bringt aber nur wenig – oMLX (MTP) ist hier schon schnell |
 
 ### Neue Modellfamilien (nicht gemessen)
 
@@ -113,7 +113,7 @@ Faustformel: **Gewichte + Draft/3 + 3 GB + KV-Cache (int8)**
 | 128K | ≈ 25 GB | ≈ 26 GB |
 | 256K | ≈ 29 GB | ≈ 27 GB |
 
-Gegenprobe aus der Messung: 27B mit 131.072 Prompt-Tokens → Splash-Prozess **25,2 GB** Spitzenspeicher. Die Formel passt.
+Gegenprobe aus der Messung: 27B mit 131.072 Prompt-Tokens → Splash-Prozess **25,3 GB** Spitzenspeicher. Die Formel passt.
 
 Der KV-Cache des 35B-A3B wächst mit dem Kontext deutlich langsamer als beim 27B. Ab 256K braucht das größere Modell sogar weniger Speicher.
 
@@ -151,7 +151,7 @@ brew install incoai/tap/splash
 splash --version
 ```
 
-Erwartet: **1.3.0 oder neuer** (gemessen mit 1.3.2, aktuell 1.5.0). Das offizielle Splash läuft nur auf **M3 oder neuer** mit **macOS 26.4 oder neuer**. Für **M1/M2** gibt es den inoffiziellen Community-Port `splash-m1` (Releases unter github.com/paperniuk/splash). Er stammt nicht von Inco AI, und Inco unterstützt ihn nicht. Ohne Homebrew legt dessen `install-m1.sh` das Programm nach `~/.local/bin`; oMLX sucht dort und in den Homebrew-Ordnern.
+Erwartet: **1.3.0 oder neuer** (gemessen mit 1.5.0). Das offizielle Splash läuft nur auf **M3 oder neuer** mit **macOS 26.4 oder neuer**. Für **M1/M2** gibt es den inoffiziellen Community-Port `splash-m1` (Releases unter github.com/paperniuk/splash). Er stammt nicht von Inco AI, und Inco unterstützt ihn nicht. Ohne Homebrew legt dessen `install-m1.sh` das Programm nach `~/.local/bin`; oMLX sucht dort und in den Homebrew-Ordnern.
 
 Danach **oMLX neu starten**, damit es Splash findet. Erst dann erscheint unter Model Settings → Advanced der Schalter „Use external engine“.
 
@@ -227,7 +227,7 @@ oMLX schreibt pro Modell ein Log nach `~/.omlx/logs/splash/` (Dateiname `omlx--<
 
 ```
 17:16:47 Ready · omlx/Qwen3.8-27B-oQ4e-mtp-e5133ef4 · context 256K · http://127.0.0.1:52180
-17:16:52 Done · input 74 · cached 64 · output 512 · TTFT 0.3s · 114.4 tok/s · 4.5 tok/cycle
+17:16:52 Done · input 74 · cached 64 · output 512 · TTFT 0.3s · 120.1 tok/s · 4.5 tok/cycle
 ```
 
 Live mitlesen: `tail -f ~/.omlx/logs/splash/*.log`
@@ -262,7 +262,7 @@ Splash needs the … DFlash2 draft in a model directory
 | Unterstützte Modelle | alle, die oMLX kann | nur Qwen3.8-27B und Qwen3.6-35B-A3B |
 | ANE/GPU-Aufteilung (ANE-Tuning) | wirkt | gilt für die oMLX-Engine, nicht für Splash |
 | KV-Cache | oMLX-Einstellungen | int8 (Grundlage der Speicherformel) |
-| Spitzenspeicher 27B @ 131K (gemessen) | 33,46 GB (MLX active) | 25,2 GB (Splash-Prozess) |
+| Spitzenspeicher 27B @ 131K (gemessen) | 33,9 GB (MLX) | 25,3 GB (Splash-Prozess) |
 
 **Konsequenz für Vergleiche:** Wenn du an oMLX-Einstellungen drehst oder das ANE-Tuning laufen lässt (siehe Kapitel 8, Schritt 3), verbesserst du die Baseline – nicht Splash. Deshalb erst oMLX gut einstellen, dann Splash dagegen messen. Sonst vergleichst du Splash mit einem schlecht eingestellten oMLX.
 
@@ -322,7 +322,7 @@ curl -s -X POST http://localhost:8000/admin/api/bench/start \
 
 Grenzen des eingebauten Benchmarks:
 
-- Er misst **synthetischen Korpustext**. Wie viel Speculative Decoding bringt, hängt aber stark vom Inhalt ab: Bei Prosa war Splash auf 35B-A3B langsamer, bei Übersetzungen schneller. Für typische Aufgaben deshalb `splashbench` (7.2).
+- Er misst **synthetischen Korpustext**. Wie viel Speculative Decoding bringt, hängt aber stark vom Inhalt ab: Beim 35B-A3B brachte Splash bei Prosa praktisch nichts (1,05×), bei Übersetzungen 1,32×. Für typische Aufgaben deshalb `splashbench` (7.2).
 - Pro Start gibt es **einen einzigen Lauf** ohne Wiederholungen. Unterschiede unter etwa 10 % sind nicht belastbar.
 - oMLX lädt Splash-Läufe **nicht** zu omlx.ai hoch (`skipped_reason: splash`). Community-Vergleiche dort zeigen nur oMLX-Läufe; einen öffentlichen Splash-Vergleich gibt es nur über eigene Tabellen.
 
@@ -359,7 +359,7 @@ Tipps:
 
 - Während der Messung nichts anderes auf dem Mac laufen lassen (Build, Videocall, Browser mit vielen Tabs).
 - Netzteil anschließen, andere Modelle entladen, Benachrichtigungen aus.
-- Einzelläufe streuen stark, besonders TTFT (in Ralfs Lauf z. B. 68 ms / 313 ms / 716 ms für denselben Prompt). Für eine Entscheidung lieber `-repeats 5` als 3.
+- Einzelläufe streuen stark, besonders TTFT. Für eine Entscheidung lieber `-repeats 5` als 3.
 - Mit Reasoning (`-thinking`) misst du einen anderen Workload. Nicht mit Läufen ohne Reasoning vergleichen.
 
 ### 7.3 Ergebnisse festhalten
@@ -428,13 +428,13 @@ Angewendet auf Ralfs Messungen:
 
 | Modell | Workload | tok/s | TTFT | Entscheidung |
 |---|---|---|---|---|
-| 27B | code | +58 % | 146 → 58 ms (besser) | **Splash an** |
-| 27B | prose | +38 % | 203 → 145 ms (besser) | **Splash an** |
-| 27B | translate | +73 % | 227 → 313 ms (schlechter) | Regel nicht erfüllt – TTFT prüfen (starke Streuung, mehr Läufe) |
-| 27B | 131K Kontext | +40 % | 245,2 → 225,0 s (besser) | **Splash an** |
-| 35B-A3B | code | −3 % | 47 → 25 ms | oMLX lassen |
-| 35B-A3B | prose | −29 % | 46 → 42 ms | oMLX lassen |
-| 35B-A3B | translate | +29 % | 49 → 67 ms (schlechter) | oMLX lassen |
+| 27B | code | +66 % | 148 → 66 ms (besser) | **Splash an** |
+| 27B | prose | +33 % | 150 → 155 ms (gleich, innerhalb der Streuung) | **Splash an** |
+| 27B | translate | +87 % | 163 → 86 ms (besser) | **Splash an** |
+| 27B | 131K Kontext | +35 % | 289,3 → 207,2 s (besser) | **Splash an** |
+| 35B-A3B | code | +24 % | 47 → 22 ms (besser) | kann an, Gewinn klein |
+| 35B-A3B | prose | +5 % | 47 → 38 ms (besser) | praktisch gleich – Regel nicht erfüllt |
+| 35B-A3B | translate | +32 % | 49 → 35 ms (besser) | kann an, Gewinn klein |
 
 Liegt ein TTFT-Unterschied innerhalb der Streuung deiner Einzelläufe, miss mit mehr Läufen nach, bevor du entscheidest.
 
@@ -452,13 +452,13 @@ Liegt ein TTFT-Unterschied innerhalb der Streuung deiner Einzelläufe, miss mit 
 
 Ralfs eigener Fehler beim Einrichten war Nr. 1: 17 GB heruntergeladen, Modell unsichtbar. Richtig sind Zielmodell + Draft.
 
-Ein weiterer Punkt betrifft die Auswertung, nicht die Technik: Ein Vergleichswert von omlx.ai stammt aus einem anderen Lauf als deine eigene Splash-Messung (so auch in Kapitel 10, langer Kontext). Für eine Entscheidung beide Engines direkt nacheinander auf demselben Mac messen.
+Ein weiterer Punkt betrifft die Auswertung, nicht die Technik: Ein Vergleichswert von omlx.ai stammt aus einem anderen Lauf als deine eigene Splash-Messung. Für eine Entscheidung beide Engines direkt nacheinander auf demselben Mac messen.
 
 ---
 
 ## 10. Referenzergebnisse: M5 Max, 128 GB
 
-Hardware und Software: M5 Max, 128 GB, macOS 27.0.1, oMLX 0.7.1rc1, Splash 1.3.2.
+Hardware und Software: M5 Max, 128 GB, macOS 27.0.1, oMLX 0.7.3rc1, Splash 1.5.0. Gemessen am 29.10.2026.
 
 ### Kurze Prompts (splashbench)
 
@@ -466,33 +466,31 @@ Median aus 3 Läufen, bis 512 Tokens, Reasoning aus. Generierung in tok/s, TTFT 
 
 | Modell | Prompt | oMLX (MTP) tok/s | Splash tok/s | Faktor | TTFT oMLX | TTFT Splash |
 |---|---|---|---|---|---|---|
-| Qwen3.8-27B | code | 72,5 | 114,4 | **1,58×** | 146 | 58 |
-| Qwen3.8-27B | prose | 53,0 | 73,3 | **1,38×** | 203 | 145 |
-| Qwen3.8-27B | translate | 69,2 | 119,6 | **1,73×** | 227 | 313 |
-| Qwen3.6-35B-A3B | code | 224,3 | 217,8 | 0,97× | 47 | 25 |
-| Qwen3.6-35B-A3B | prose | 196,4 | 140,2 | 0,71× | 46 | 42 |
-| Qwen3.6-35B-A3B | translate | 208,4 | 268,0 | 1,29× | 49 | 67 |
+| Qwen3.8-27B | code | 72,2 | 120,1 | **1,66×** | 148 | 66 |
+| Qwen3.8-27B | prose | 50,4 | 67,0 | **1,33×** | 150 | 155 |
+| Qwen3.8-27B | translate | 64,0 | 119,7 | **1,87×** | 163 | 86 |
+| Qwen3.6-35B-A3B | code | 202,2 | 251,4 | 1,24× | 47 | 22 |
+| Qwen3.6-35B-A3B | prose | 181,1 | 190,3 | 1,05× | 47 | 38 |
+| Qwen3.6-35B-A3B | translate | 215,6 | 285,3 | 1,32× | 49 | 35 |
 
-Der Faktor beim 35B-A3B-Code (0,97×) liegt innerhalb der Streuung: Splash schwankte dort zwischen 190 und 233 tok/s.
+Beim 35B-A3B ist Splash überall etwas schneller, aber nur wenig; bei Prosa praktisch gleich. oMLX mit MTP liefert hier schon rund 200 tok/s, da bleibt wenig Luft, und bei Prosa rät der Draft schlechter.
 
 ### Langer Kontext (eingebauter oMLX-Benchmark, Qwen3.8-27B)
 
-131.072 Prompt-Tokens, 128 Ausgabe-Tokens.
+131.072 Prompt-Tokens, 128 Ausgabe-Tokens, Korpus `code_python`, je ein eigener Lauf pro Engine.
 
-| Kennzahl | oMLX mit MTP¹ | Splash | Unterschied |
+| Kennzahl | oMLX mit MTP | Splash | Unterschied |
 |---|---|---|---|
-| Prompt Processing | 534,6 tok/s | 582,5 tok/s | +9 % |
-| Token Generation | 52,6 tok/s | 73,5 tok/s | +40 % |
-| Zeit bis erstes Token | 245,2 s | 225,0 s | −20 s |
-| Spitzenspeicher | 33,46 GB (MLX active) | 25,2 GB (Splash-Prozess) | −8,3 GB |
-
-¹ Lauf von omlx.ai, gleiche Hardware, nicht Ralfs eigener Lauf.
+| Prompt Processing | 453,1 tok/s | 632,6 tok/s | +40 % |
+| Token Generation | 52,2 tok/s | 70,6 tok/s | +35 % |
+| Zeit bis erstes Token | 289,3 s (knapp 5 min) | 207,2 s (knapp 3,5 min) | −82 s |
+| Spitzenspeicher | 33,9 GB (MLX) | 25,3 GB (Splash-Prozess) | −8,6 GB |
 
 ### Was man daraus lernt
 
-- **27B: Splash an.** 1,4–1,7× mehr Tokens pro Sekunde bei gleicher Antwort, bei langem Kontext +40 % und weniger Speicher.
-- **35B-A3B: oMLX lassen.** MTP ist bei diesem MoE-Modell schon schnell; Splash ist bei Code gleichauf, bei Prosa deutlich langsamer.
-- **Langer Kontext bleibt Geduldssache.** Auch mit Splash 225 s bis zum ersten Token bei 131K. Splash beschleunigt vor allem das Schreiben, kaum das Einlesen. Wiederholt sich der Kontext (Agent, gleiche Codebasis), hilft der SSD-Prefix-Cache von Splash.
+- **27B: Splash an.** 1,3- bis 1,9-mal mehr Tokens pro Sekunde bei gleicher Antwort. Auch das erste Token kommt meist früher. Bei langem Kontext +35 % beim Schreiben und weniger Speicher.
+- **35B-A3B: kann an, bringt aber nur wenig.** oMLX (MTP) ist bei diesem MoE-Modell schon schnell; Splash ist 1,05- bis 1,3-mal so schnell, vor allem bei Code und Übersetzung, bei Prosa praktisch gleich.
+- **Langer Kontext bleibt Geduldssache.** Splash liest 40 % schneller ein und spart rund 80 Sekunden bis zum ersten Token – trotzdem wartest du bei 131K noch knapp 3,5 Minuten. Das Einlesen bleibt der Flaschenhals. Wiederholt sich der Kontext (Agent, gleiche Codebasis), hilft der SSD-Prefix-Cache von Splash.
 - **Erst oMLX einstellen, dann vergleichen.** Die Community schafft mit oMLX allein bis 98,5 tok/s beim 27B auf M5 Max.
 - **Messen statt raten.** Dein Chip, dein RAM, deine Prompts – die Zahlen oben sind ein Startpunkt, kein Versprechen.
 
@@ -545,7 +543,7 @@ Diese Punkte sind im Projekt-Brief nicht belegt und vor der Veröffentlichung zu
 ## 13. Quellen
 
 - oMLX: GitHub `jundot/omlx`. Splash-Integration gelesen in `/Applications/oMLX.app/Contents/Resources/omlx/engine/splash.py` und `settings.py`, oMLX 0.7.1rc1.
-- Splash: GitHub `incoai/splash`, Homebrew-Formel `incoai/tap/splash` 1.3.2.
+- Splash: GitHub `incoai/splash`, Homebrew-Formel `incoai/tap/splash` 1.5.0.
 - splash-m1 für M1/M2: github.com/paperniuk/splash/releases.
 - omlx.ai-Benchmark Qwen3.8-27B-oQ4e-mtp, M5 Max 128 GB: https://omlx.ai/benchmarks/performance/9qwu2bjm
-- Eigene Messungen vom 17.10.2026: `splashbench` (Rohdaten im Episodenordner, nicht in diesem Repo) und eingebauter oMLX-Benchmark, Lauf `bench-7ec981a4e42e`.
+- Eigene Messungen vom 29.10.2026 (oMLX 0.7.3rc1, Splash 1.5.0): Splash Bench (Rohdaten im Episodenordner, nicht in diesem Repo) und eingebauter oMLX-Benchmark, Läufe `bench-2b8b1a123d70` und `bench-25fa79b096ca`.

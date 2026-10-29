@@ -15,7 +15,7 @@ Finde auf deinem eigenen Mac heraus, ob sich **Splash** als zweiter Motor in **o
 
 Alle Programme sprechen nur mit dem **lokalen** oMLX-Server (Standard `http://localhost:8000`). Es gibt keine Telemetrie und keine Verbindung ins Internet.
 
-Gemessen auf einem M5 Max (128 GB): Qwen3.8-27B mit Splash 1,38–1,73× schneller, Qwen3.6-35B-A3B dagegen 0,71–1,29× – dort ist oMLX mit MTP schon schnell. Deshalb: messen statt raten.
+Gemessen auf einem M5 Max (128 GB) am 29.10.2026 mit oMLX 0.7.3rc1 und Splash 1.5.0: Qwen3.8-27B mit Splash 1,33–1,87× schneller, Qwen3.6-35B-A3B nur 1,05–1,32× – dort ist oMLX mit MTP schon schnell, Splash bringt nur wenig. Deshalb: messen statt raten.
 
 ## Voraussetzungen
 
@@ -101,7 +101,7 @@ Beim Start und auf Knopfdruck („Erneut prüfen“) prüft die App der Reihe na
 | Splash installiert | `splash` ab 1.3.0 über Homebrew; gelb unter 1.4.0, weil Qwen3.8-Flash-Next 1.4.0 braucht. M1/M2: `splash-m1` |
 | oMLX erreichbar | oMLX läuft; Adresse aus `~/.omlx/settings.json` (`server.host`, `server.port`). Solange oMLX noch Modelle lädt, sagt die App das. |
 | Zugriff auf oMLX | API-Key aus `OMLX_API_KEY` oder `auth.api_key` in der Einstellungsdatei, falls oMLX einen verlangt |
-| oMLX mit Splash-Unterstützung | eine oMLX-Version mit externer Engine (gemessen mit 0.7.1rc1, geprüft mit 0.7.3rc1) |
+| oMLX mit Splash-Unterstützung | eine oMLX-Version mit externer Engine (gemessen und geprüft mit 0.7.3rc1) |
 | Splash-fähiges Modell | mindestens ein Zielmodell mit DFlash2-Draft, das oMLX für Splash freigibt. Fehlt der Draft, nennt oMLX ihn; die App zeigt dann den `hf download`-Befehl, auch für Familien, die nicht im Katalog stehen |
 | Arbeitsspeicher | Schätzung je Modell mit Splash bei 32K Kontext gegen ca. 75 % des RAM. Modelle, die knapp werden, sind markiert und nicht vorausgewählt. |
 
@@ -194,9 +194,9 @@ Modell Qwen3.8-27B
 
 Empfehlung nach Arbeitsspeicher
   ✓ Qwen3.8-27B: bis 256K Kontext (≈ 29 GB mit Splash)
-      → Splash einschalten: 1,38–1,73× mehr tok/s gemessen
+      → Splash einschalten: 1,33–1,87× mehr tok/s gemessen
   ✓ Qwen3.6-35B-A3B: bis 256K Kontext (≈ 27 GB mit Splash)
-      → oMLX (MTP) ist hier schon schnell: 0,71–1,29× – selbst messen
+      → oMLX (MTP) ist hier schon schnell, Splash bringt nur wenig: 1,05–1,32× gemessen
 
 Ergebnis: 0 Fehler, 2 Warnungen
 ```
@@ -241,8 +241,8 @@ Beispiel (Auszug):
 ```
 | Modell | Engine | Prompt | Läufe | TTFT (Median) | tok/s (Median) | Faktor vs. oMLX |
 |---|---|---|---|---|---|---|
-| Qwen3.8-27B-oQ4e-mtp | oMLX | code | 3 | 146ms | 72.5 | – |
-| Qwen3.8-27B-oQ4e-mtp | splash | code | 3 | 58ms | 114.4 | 1.58× |
+| Qwen3.8-27B-oQ4e-mtp | oMLX | code | 3 | 148ms | 72.2 | – |
+| Qwen3.8-27B-oQ4e-mtp | splash | code | 3 | 66ms | 120.1 | 1.66× |
 ```
 
 Dauer: pro Modell einige Minuten (zwei Ladevorgänge plus 18 Läufe).

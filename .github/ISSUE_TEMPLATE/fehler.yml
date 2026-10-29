@@ -1,0 +1,50 @@
+name: Fehler melden
+description: Etwas funktioniert nicht oder misst falsch.
+labels: [fehler, triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Danke fürs Melden! Am schnellsten geht es mit der Diagnose aus der App:
+        **Voraussetzungen → Diagnose kopieren**, dann unten einfügen.
+        Sicherheitslücken bitte nicht hier, sondern wie in SECURITY.md beschrieben.
+  - type: textarea
+    id: was
+    attributes:
+      label: Was ist passiert?
+      description: Was hast du gemacht, was hast du erwartet, was kam stattdessen?
+    validations:
+      required: true
+  - type: textarea
+    id: diagnose
+    attributes:
+      label: Diagnose
+      description: Aus der App (Voraussetzungen → Diagnose kopieren). Ohne App-Start ersatzweise die Ausgabe von `splashcheck`.
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: modell
+    attributes:
+      label: Modell
+      description: Betroffenes Modell, wie es in der App steht – falls es um ein Modell geht.
+      placeholder: Qwen3.8-27B-oQ4e-mtp
+  - type: textarea
+    id: log
+    attributes:
+      label: Fehlermeldung oder Log
+      description: |
+        Die Meldung aus der App (unter „Details“) oder die letzten Zeilen aus `~/Library/Logs/Splash Bench.log`.
+        Bei Splash-Ladefehlern hilft der Splash-Log, dessen Pfad in der Meldung steht.
+        Bitte vorher prüfen, dass kein API-Key darin steht.
+      render: text
+  - type: dropdown
+    id: start
+    attributes:
+      label: Wie gestartet?
+      options:
+        - Splash Bench.app aus dem DMG
+        - selbst gebaut (makeapp oder go build)
+        - Kommandozeile (splashcheck, splashbench, splashdemo)
+    validations:
+      required: true

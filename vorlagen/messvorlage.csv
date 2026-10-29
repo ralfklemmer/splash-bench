@@ -1,0 +1,16 @@
+datum;chip;ram_gb;macos;omlx_version;splash_version;modell;engine;werkzeug;workload;prompt_tokens;max_tokens;reasoning;laeufe;ttft_ms_median;tok_s_median;prompt_processing_tok_s;spitzenspeicher_gb;faktor_vs_omlx;notizen
+;M5 Max;128;27.0.1;0.7.1rc1;1.3.2;Qwen3.8-27B-oQ4e-mtp;omlx-mtp;splashbench;code;;512;aus;3;146;72,5;;;1,00;BEISPIEL Ralf
+;M5 Max;128;27.0.1;0.7.1rc1;1.3.2;Qwen3.8-27B-oQ4e-mtp;splash;splashbench;code;;512;aus;3;58;114,4;;;1,58;BEISPIEL Ralf
+;M5 Max;128;27.0.1;0.7.1rc1;1.3.2;Qwen3.8-27B-oQ4e-mtp;omlx-mtp;splashbench;prose;;512;aus;3;203;53,0;;;1,00;BEISPIEL Ralf
+;M5 Max;128;27.0.1;0.7.1rc1;1.3.2;Qwen3.8-27B-oQ4e-mtp;splash;splashbench;prose;;512;aus;3;145;73,3;;;1,38;BEISPIEL Ralf
+;M5 Max;128;27.0.1;0.7.1rc1;1.3.2;Qwen3.8-27B-oQ4e-mtp;omlx-mtp;splashbench;translate;;512;aus;3;227;69,2;;;1,00;BEISPIEL Ralf
+;M5 Max;128;27.0.1;0.7.1rc1;1.3.2;Qwen3.8-27B-oQ4e-mtp;splash;splashbench;translate;;512;aus;3;313;119,6;;;1,73;BEISPIEL Ralf - TTFT streut stark (68/313/716 ms)
+;M5 Max;128;27.0.1;0.7.1rc1;1.3.2;Qwen3.6-35B-A3B-oQ4e-mtp;omlx-mtp;splashbench;code;;512;aus;3;47;224,3;;;1,00;BEISPIEL Ralf
+;M5 Max;128;27.0.1;0.7.1rc1;1.3.2;Qwen3.6-35B-A3B-oQ4e-mtp;splash;splashbench;code;;512;aus;3;25;217,8;;;0,97;BEISPIEL Ralf
+;M5 Max;128;27.0.1;0.7.1rc1;1.3.2;Qwen3.6-35B-A3B-oQ4e-mtp;omlx-mtp;splashbench;prose;;512;aus;3;46;196,4;;;1,00;BEISPIEL Ralf
+;M5 Max;128;27.0.1;0.7.1rc1;1.3.2;Qwen3.6-35B-A3B-oQ4e-mtp;splash;splashbench;prose;;512;aus;3;42;140,2;;;0,71;BEISPIEL Ralf
+;M5 Max;128;27.0.1;0.7.1rc1;1.3.2;Qwen3.6-35B-A3B-oQ4e-mtp;omlx-mtp;splashbench;translate;;512;aus;3;49;208,4;;;1,00;BEISPIEL Ralf
+;M5 Max;128;27.0.1;0.7.1rc1;1.3.2;Qwen3.6-35B-A3B-oQ4e-mtp;splash;splashbench;translate;;512;aus;3;67;268,0;;;1,29;BEISPIEL Ralf
+;M5 Max;128;;;;Qwen3.8-27B-oQ4e-mtp;omlx-mtp;omlx-benchmark;langer-kontext;131072;128;;1;245200;52,6;534,6;33,46;1,00;BEISPIEL - Lauf von omlx.ai (anderer Lauf, gleiche Hardware), Speicher = MLX active
+;M5 Max;128;27.0.1;0.7.1rc1;1.3.2;Qwen3.8-27B-oQ4e-mtp;splash;omlx-benchmark;langer-kontext;131072;128;;1;225000;73,5;582,5;25,2;1,40;BEISPIEL Ralf, Speicher = Splash-Prozess
+;;;;;;;;;;;;;;;;;;;DEINE MESSUNG: ab hier eintragen

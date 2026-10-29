@@ -1,0 +1,36 @@
+name: Release
+
+# Push a tag like v1.2.0 to publish Splash-Bench-1.2.0.dmg as a release.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: false
+      - run: go vet ./...
+      - run: go test ./...
+      - name: App und DMG bauen
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          go run ./cmd/makeapp -version "$version" -dmg -out dist
+          GOOS=darwin GOARCH=arm64 go build -trimpath -o dist/cli/ ./cmd/splashcheck ./cmd/splashbench ./cmd/splashdemo ./cmd/splashui
+          tar -czf "dist/splash-bench-cli-$version-darwin-arm64.tar.gz" -C dist/cli .
+          cd dist && shasum -a 256 *.dmg *.tar.gz > SHA256SUMS.txt
+      - name: Release veröffentlichen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          flags=()
+          case "$GITHUB_REF_NAME" in *-*) flags+=(--prerelease) ;; esac # v1.2.0-rc1
+          gh release create "$GITHUB_REF_NAME" dist/*.dmg dist/*.tar.gz dist/SHA256SUMS.txt \
+            --title "Splash Bench ${GITHUB_REF_NAME#v}" --generate-notes --verify-tag "${flags[@]}"

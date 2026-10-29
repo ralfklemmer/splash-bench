@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    # macOS on Apple Silicon: the app bundle needs codesign and iconutil.
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: false # no dependencies, nothing to cache
+      - name: gofmt
+        run: |
+          unformatted=$(gofmt -l .)
+          if [ -n "$unformatted" ]; then
+            echo "Nicht mit gofmt formatiert:"; echo "$unformatted"; exit 1
+          fi
+      - run: go vet ./...
+      - run: go test ./...
+      - name: App bauen
+        run: go run ./cmd/makeapp -out dist

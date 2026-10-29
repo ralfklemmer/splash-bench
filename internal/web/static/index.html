@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Splash Bench</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="app.css">
+<script src="theme.js"></script>
+<script src="app.js" defer></script>
+</head>
+<body>
+<div class="ended" id="ended" hidden>
+  <img src="icon.svg" width="48" height="48" alt="">
+  <h1>Splash Bench ist beendet</h1>
+  <p class="lead">Du kannst dieses Fenster schließen.</p>
+</div>
+<div class="page" id="page">
+
+  <header class="top">
+    <div class="brand">
+      <img src="icon.svg" width="30" height="30" alt="">
+      <span>Splash Bench</span>
+    </div>
+    <div class="top-right">
+      <button type="button" class="status" id="status" aria-expanded="false" aria-controls="requirements"><span class="dot" aria-hidden="true"></span><span id="status-text">Prüfe Voraussetzungen …</span><svg class="caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <button type="button" class="icon-btn" id="theme" aria-label="Dunkle Darstellung"></button>
+      <button type="button" class="icon-btn" id="quit" aria-label="Splash Bench beenden" title="Beenden">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3v9"/><path d="M6.3 6.3a8 8 0 1 0 11.4 0"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <section class="card requirements" id="requirements" aria-labelledby="requirements-title" hidden>
+    <div class="requirements-head">
+      <h2 id="requirements-title" tabindex="-1">Voraussetzungen</h2>
+      <div class="requirements-actions">
+        <button type="button" class="link" id="copy-diagnosis" title="Chip, Versionen und Prüfergebnisse für eine Fehlermeldung kopieren">Diagnose kopieren</button>
+        <a class="link" href="https://github.com/ralfklemmer/splash-bench/issues/new?template=fehler.yml" target="_blank" rel="noopener noreferrer">Problem melden</a>
+        <button type="button" class="link" id="recheck">Erneut prüfen</button>
+      </div>
+    </div>
+    <ul class="checks" id="checks"></ul>
+    <p class="muted requirements-note">Splash von Inco AI braucht einen Mac mit M3 oder neuer und macOS 26.4 oder neuer. Auf M1/M2 geht nur der inoffizielle Community-Port splash-m1. Die Speicherangaben sind Schätzungen für 32K Kontext.</p>
+  </section>
+
+  <section class="card requirements" id="catalog" aria-labelledby="catalog-title" hidden>
+    <div class="requirements-head">
+      <h2 id="catalog-title" tabindex="-1">Empfohlene Modelle</h2>
+      <button type="button" class="link" id="catalog-close">Schließen</button>
+    </div>
+    <p class="catalog-note">Die Modellfamilien, die Splash bedient, mit Speicherschätzung und Download-Befehl. Gemessen sind nur Qwen3.8-27B und Qwen3.6-35B-A3B. <strong>Welche Modelle oMLX an Splash gibt, entscheidet oMLX selbst</strong> – sie stehen unten bei „Modelle“, auch wenn sie hier fehlen, und einen fehlenden Draft nennt die Prüfung oben. Nach einem Download oMLX neu starten.</p>
+    <ul class="checks" id="catalog-list"></ul>
+    <p class="muted catalog-asof" id="catalog-asof"></p>
+  </section>
+
+  <section class="card controls" aria-label="Auswahl">
+    <div class="group models-group">
+      <div class="group-head">
+        <span class="label" id="models-label">Modelle</span>
+        <button type="button" class="link small" id="catalog-toggle" aria-expanded="false" aria-controls="catalog">Empfehlungen</button>
+      </div>
+      <div class="chips" id="models" role="group" aria-labelledby="models-label"></div>
+    </div>
+    <div class="group">
+      <span class="label" id="prompts-label">Aufgaben</span>
+      <div class="chips" id="prompts" role="group" aria-labelledby="prompts-label"></div>
+    </div>
+    <div class="divider" aria-hidden="true"></div>
+    <div class="group">
+      <span class="label">Durchläufe</span>
+      <div class="stepper">
+        <button type="button" id="dec" aria-label="Weniger Durchläufe">−</button>
+        <span id="repeats" aria-live="polite">3</span>
+        <button type="button" id="inc" aria-label="Mehr Durchläufe">+</button>
+      </div>
+    </div>
+    <div class="action">
+      <button type="button" class="primary" id="start">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
+        Vergleich starten
+      </button>
+      <button type="button" class="secondary big" id="cancel" hidden>Abbrechen</button>
+    </div>
+  </section>
+
+  <section class="stage" aria-live="polite">
+    <div id="stage-idle" class="idle">
+      <h1>Wie viel schneller ist Splash auf <em>deinem</em> Mac?</h1>
+      <p class="lead">Gleiche Aufgaben, einmal mit oMLX, einmal mit Splash.</p>
+      <button type="button" class="blocked" id="blocked" hidden>Noch nicht startklar – <u>was fehlt, anzeigen</u> <span aria-hidden="true">→</span></button>
+      <button type="button" class="link" id="previous" hidden></button>
+    </div>
+
+    <div id="stage-running" class="running" hidden>
+      <div class="running-head">
+        <div class="running-title">
+          <span class="pulse" aria-hidden="true"></span>
+          <strong id="live-model"></strong>
+          <span class="muted" id="live-task"></span>
+        </div>
+        <span class="mono muted" id="progress-text">0 %</span>
+      </div>
+      <div class="lane" id="lane-omlx">
+        <div class="lane-head">
+          <span class="lane-name"><span class="swatch omlx" aria-hidden="true"></span>oMLX<span class="lane-hint"></span></span>
+          <span class="lane-rate"><span class="lane-value omlx-text">–</span><span class="unit">tok/s</span></span>
+        </div>
+        <div class="track lane-track"><div class="fill omlx"></div></div>
+      </div>
+      <div class="lane" id="lane-splash">
+        <div class="lane-head">
+          <span class="lane-name"><span class="swatch splash" aria-hidden="true"></span>Splash<span class="lane-hint"></span></span>
+          <span class="lane-rate"><span class="lane-value splash-text">–</span><span class="unit">tok/s</span></span>
+        </div>
+        <div class="track lane-track"><div class="fill splash"></div></div>
+      </div>
+      <div class="progress" role="progressbar" aria-label="Fortschritt" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress"><div class="progress-fill"></div></div>
+    </div>
+
+    <div id="stage-done" class="summary" hidden></div>
+  </section>
+
+  <section class="card results" id="results" hidden>
+    <div class="results-bar">
+      <div class="segmented" role="group" aria-label="Kennzahl">
+        <button type="button" data-metric="tps" aria-pressed="true">Geschwindigkeit</button>
+        <button type="button" data-metric="ttft" aria-pressed="false">Wartezeit</button>
+      </div>
+      <div class="legend">
+        <span><span class="swatch omlx" aria-hidden="true"></span>oMLX</span>
+        <span><span class="swatch splash" aria-hidden="true"></span>Splash</span>
+        <span class="muted" id="metric-note">tok/s · mehr ist besser</span>
+      </div>
+    </div>
+    <div class="charts" id="charts"></div>
+    <div class="problems" id="problems" hidden></div>
+    <div class="notice" id="notice" hidden></div>
+    <footer class="results-footer" id="results-footer" hidden>
+      <span class="muted" id="footnote"></span>
+      <div class="buttons">
+        <a class="secondary" id="download" href="api/result" download>Ergebnis speichern</a>
+        <button type="button" class="strong" id="reset">Neue Messung</button>
+      </div>
+    </footer>
+  </section>
+
+  <div class="toast" id="toast" role="alert" hidden></div>
+</div>
+</body>
+</html>

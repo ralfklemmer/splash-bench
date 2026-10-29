@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Sicherheitslücke melden
+    url: https://github.com/ralfklemmer/splash-bench/security/advisories/new
+    about: Bitte vertraulich melden, nicht als öffentliches Issue.
+  - name: Probleme mit Splash selbst
+    url: https://github.com/incoai
+    about: Splash ist ein Produkt von Inco AI. Fehler in Splash bitte dort melden.
+  - name: Probleme mit oMLX selbst
+    url: https://github.com/jundot/omlx/issues
+    about: oMLX ist ein eigenes Projekt. Fehler in oMLX bitte dort melden.

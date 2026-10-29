@@ -1,0 +1,21 @@
+name: Idee oder Wunsch
+description: Eine neue Funktion, ein Modell für den Katalog oder eine Verbesserung.
+labels: [idee, triage]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Welches Problem soll das lösen?
+      description: Beschreib die Situation, nicht nur die Lösung.
+    validations:
+      required: true
+  - type: textarea
+    id: vorschlag
+    attributes:
+      label: Dein Vorschlag
+  - type: textarea
+    id: messung
+    attributes:
+      label: Eigene Messwerte (optional)
+      description: Für ein neues Katalog-Modell – Chip, RAM, Versionen und Ergebnis aus Splash Bench.
+      render: text

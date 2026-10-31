@@ -34,14 +34,14 @@ So arbeitet Splash: oMLX bleibt deine App auf Port 8000. Mit dem Schalter „Use
 
 ## 2. Einrichten in 7 Schritten
 
-Splash Bench prüft alles und zeigt dir für jede Lücke den Befehl zum Kopieren. **Splash Bench installiert und lädt selbst nichts** – die Befehle führst du im Terminal aus.
+Splash Bench prüft alles und sagt dir, was fehlt. **Splash Bench installiert und lädt selbst nichts.** Splash installierst du mit einem Befehl im Terminal, die Modelle lädst du im oMLX-Dashboard.
 
 ### Schritt 1 – oMLX installieren
 
 1. oMLX von omlx.ai oder github.com/jundot/omlx laden, nach **Programme** ziehen, starten.
-2. Im Browser `http://localhost:8000/admin` öffnen und einen **API-Key** setzen.
+2. In der Menüleiste auf das oMLX-Symbol → **Open Web Dashboard**. Dort einen **API-Key** setzen.
 
-✓ Kontrolle: Die Admin-Seite lädt.
+✓ Kontrolle: Das Dashboard öffnet sich im Browser.
 
 ### Schritt 2 – Splash Bench installieren
 
@@ -55,7 +55,7 @@ Ab jetzt gilt nach jedem Schritt: In Splash Bench **Erneut prüfen** klicken.
 
 ### Schritt 3 – Homebrew installieren
 
-Nur falls noch nicht vorhanden: Befehl von brew.sh kopieren und im Terminal ausführen.
+Nur falls noch nicht vorhanden: Befehl von brew.sh kopieren, im Terminal ausführen und danach die angezeigten „Next steps“ ausführen.
 
 ✓ Kontrolle: `brew --version` gibt eine Version aus.
 
@@ -65,33 +65,35 @@ Nur falls noch nicht vorhanden: Befehl von brew.sh kopieren und im Terminal ausf
 brew install incoai/tap/splash
 ```
 
-Danach **oMLX beenden und neu öffnen**, damit es Splash findet.
+Danach oMLX neu starten: Menüleiste → oMLX-Symbol → **Quit oMLX**, dann oMLX aus **Programme** wieder öffnen.
 
-✓ Kontrolle: In Splash Bench ist „Splash installiert“ grün (mindestens Version 1.3.0).
+✓ Kontrolle: In Splash Bench ist „Splash installiert“ grün (mindestens Version 1.3.0). Im Dashboard unter **Settings → Integration Settings → External engines** steht Splash mit „Found automatically.“
 
 ### Schritt 5 – Modell und Draft herunterladen
 
-Du brauchst **zwei** Downloads: das Modell und den passenden Draft.
+Du brauchst **zwei** Downloads: das Modell und den passenden Draft. Welches Modell zu deinem RAM passt, zeigt Splash Bench unter **Empfehlungen**. Für die meisten Macs ab 32 GB ist es Qwen3.8-27B:
 
-1. Einmalig das Download-Programm installieren:
+| Was | Repository ID | Größe |
+|---|---|---|
+| Modell | `Jundot/Qwen3.8-27B-oQ4e-mtp` | 16,6 GB |
+| Draft | `incoai/Qwen3.8-27B-DFlash2` | 3,8 GB |
 
-   ```sh
-   brew install huggingface-cli
-   ```
+1. Im Dashboard **Models → Downloader** öffnen.
+2. Die ID des Modells in **Repository ID** einfügen → **Download**. Das Feld **HF Token** bleibt leer.
+3. Dasselbe für den Draft.
+4. Warten, bis beide fertig sind (bei 100 Mbit/s rund eine halbe Stunde).
 
-2. In Splash Bench auf **Empfehlungen** klicken. Dort steht, welches Modell zu deinem RAM passt, mit den fertigen `hf download`-Befehlen. **Kopieren**, im Terminal einfügen, warten (ca. 20 GB).
-
-Nicht das „Splash“-Komplettpaket von Hugging Face laden (`incoai/…-Splash`). oMLX sieht es nicht.
+Nicht das „Splash“-Komplettpaket laden (`incoai/…-Splash`). oMLX sieht es nicht.
 
 ### Schritt 6 – oMLX die Modelle einlesen lassen
 
-**oMLX beenden und neu öffnen.**
+Im Dashboard **Models → Manager → Reload**. Das entlädt alle gerade geladenen Modelle, also nicht mitten in einem Chat.
 
-✓ Kontrolle: In oMLX stehen das Modell **und** der Draft in der Modellliste. Den Draft nie selbst auswählen, aber auch nicht löschen – Splash braucht ihn im Hintergrund.
+✓ Kontrolle: Im Manager stehen das Modell **und** der Draft. Den Draft nie zum Chatten auswählen, aber auch nicht löschen – Splash braucht ihn im Hintergrund.
 
 ### Schritt 7 – Splash einschalten
 
-oMLX → **Model Settings** → Modell wählen → **Advanced** → **„Use external engine“** einschalten.
+**Models → Manager** → in der Zeile des Modells das Einstellungs-Symbol (Model settings) → **Advanced Settings** → **Use external engine** einschalten → Engine **Splash** → **Save**.
 
 ✓ Kontrolle: Splash Bench zeigt alle Punkte grün.
 
@@ -115,11 +117,11 @@ Einzelläufe schwanken. Für eine Entscheidung 5 Durchläufe statt 3 einstellen.
 
 | Symptom | Lösung |
 |---|---|
-| Modell taucht in oMLX nicht auf | Du hast das Splash-Komplettpaket geladen. Löschen, Modell **und** Draft getrennt laden (Schritt 5), oMLX neu starten. |
-| Schalter „Use external engine“ fehlt | Splash ist nicht installiert oder oMLX wurde danach nicht neu gestartet (Schritt 4). |
+| Modell taucht in oMLX nicht auf | Du hast das Splash-Komplettpaket geladen. Im Finder ⇧⌘G → `~/.omlx/models` → den Ordner mit `-Splash` am Ende in den Papierkorb. Dann Modell **und** Draft getrennt laden (Schritt 5) und Reload (Schritt 6). |
+| Splash fehlt unter External engines, oder der Schalter „Use external engine“ fehlt | Splash ist nicht installiert oder oMLX wurde danach nicht neu gestartet (Schritt 4). |
 | Schalter ausgegraut, oder `Splash needs the … DFlash2 draft` | Draft fehlt oder oMLX hat ihn noch nicht eingelesen. Schritt 5 und 6 wiederholen. |
 | Splash Bench: „antwortet kein oMLX“ | oMLX starten. Steht dort „oMLX startet noch“: kurz warten. |
-| Splash Bench: „verlangt einen API-Key, es ist aber keiner hinterlegt“ | In `http://localhost:8000/admin` einen Key setzen (Schritt 1). |
+| Splash Bench: „verlangt einen API-Key, es ist aber keiner hinterlegt“ | Im oMLX-Dashboard einen API-Key setzen (Schritt 1). |
 | Splash Bench: „Kein Modell, das Splash bedienen kann“ | Modell und Draft fehlen oder sind noch nicht eingelesen. Schritt 5 und 6. |
 | HTTP 409 „unload is pending“ | oMLX entlädt gerade ein Modell. Kurz warten, erneut versuchen. |
 | Erste Antwort dauert lange | Normal: Das Modell wird geladen. Danach geht es schnell. |
@@ -175,9 +177,10 @@ Alle Befehle aus diesem Ordner heraus:
 ./splashdemo -model Qwen3.8-27B-oQ4e-mtp              # Live-Vergleich wie im Video
 ```
 
-Modelle von Hand laden (Beispiel Qwen3.8-27B; den richtigen Ordner nennt `./splashcheck`):
+Modelle im Terminal statt im Downloader laden (Beispiel Qwen3.8-27B; den richtigen Ordner nennt `./splashcheck`):
 
 ```sh
+brew install hf   # einmalig
 hf download Jundot/Qwen3.8-27B-oQ4e-mtp --local-dir ~/.omlx/models/Jundot/Qwen3.8-27B-oQ4e-mtp
 hf download incoai/Qwen3.8-27B-DFlash2  --local-dir ~/.omlx/models/incoai/Qwen3.8-27B-DFlash2
 ```

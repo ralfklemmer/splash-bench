@@ -1,6 +1,6 @@
 # Modell-Matrix: Was passt zu welchem RAM?
 
-Gilt für oMLX mit Splash als externer Engine, auf einem Mac mit **M3 oder neuer** und **macOS 26.4 oder neuer**. Die Matrix deckt die beiden gemessenen Modelle **Qwen3.8-27B** und **Qwen3.6-35B-A3B** ab. Seit Splash 1.4 und oMLX 0.7.3rc1 kommen Qwen3.8-Flash-Next (≈ 66 GB bei 32K), Ornith-1.5-122B (≈ 69 GB) und Flint (≈ 27 GB) dazu. Sie sind nicht gemessen, Details im Handbuch, Kapitel 3.
+Gilt für oMLX mit Splash als externer Engine, auf einem Mac mit **M3 oder neuer** und **macOS 26.4 oder neuer**. Die Matrix deckt die beiden gemessenen Modelle **Qwen3.8-27B** und **Qwen3.6-35B-A3B** ab. Seit Splash 1.4 und oMLX 0.7.3rc1 kommen Qwen3.8-Flash-Next (≈ 66 GB bei 32K), Ornith-1.5-122B (≈ 69 GB) und Flint (≈ 27 GB) dazu. Sie sind nicht gemessen, Download-Befehle zeigt Splash Bench unter „Empfehlungen“.
 
 > **Gemessen ist nur die 128-GB-Stufe** (M5 Max, macOS 27.0.1, gemessen am 29.10.2026 mit oMLX 0.7.3rc1 und Splash 1.5.0). Alle anderen Stufen sind aus der Speicherformel abgeleitet – **Schätzungen**. Prüfe auf deinem Mac mit Splash Bench oder `splashcheck` und miss selbst.
 

@@ -31,6 +31,8 @@ Was davon fehlt, zeigt dir die App nach dem Start selbst – mit installierten V
 2. Das DMG öffnen und **Splash Bench** in den Ordner **Programme** ziehen.
 3. Splash Bench per Doppelklick starten.
 
+Das DMG enthält nur die App. Die Kommandozeilen-Programme (`splashcheck`, `splashbench`, `splashdemo`) liegen im selben Release als `splash-bench-cli-<Version>-darwin-arm64.tar.gz`; Entpacken und Aufruf beschreibt `HANDBUCH.md`, Kapitel 6.
+
 ### „Splash Bench“ kann nicht geöffnet werden?
 
 Die App ist **nicht von Apple notarisiert** (dafür bräuchte es ein kostenpflichtiges Apple-Entwicklerkonto). Beim ersten Start meldet macOS deshalb, dass es die App nicht auf Schadsoftware prüfen konnte. So startest du sie trotzdem – das ist nur einmal nötig:
